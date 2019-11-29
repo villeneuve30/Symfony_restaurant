@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Allergen;
+use App\Entity\Category;
+use App\Entity\Dish;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -50,6 +53,65 @@ class AdminController extends AbstractController
         return $this->render('admin/team_insert.html.twig', [
             'controller_name' => 'AdminController',
             'form' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/admin/allergen/inserer", name="admin_allergen_insert")
+     */
+    public function allergenInsert(){
+        $entityManager = $this->getDoctrine()->getManager();
+        $dishesRepository = $entityManager->getRepository(Dish::class);
+        $categoryRepository = $entityManager->getRepository(Category::class);
+        $allergenRepository = $entityManager->getRepository(Allergen::class);
+
+        $dishes = $dishesRepository->findAll();
+
+        $categoryArray = json_decode(file_get_contents("dishes.json"), true);
+        foreach ($categoryArray as $key => $category){
+            foreach($category as $dish){
+                $dishEntity = $dishesRepository->findOneBy(['name' => $dish["name"]]);
+                if(!$dishEntity)
+                    $dishEntity = new Dish();
+
+                $categoryEntity = $categoryRepository->findOneBy(['name' => $key]);
+                if(!$categoryEntity)
+                    $categoryEntity = new Category();
+                $categoryEntity->setName($key);
+                $categoryEntity->setImage("image".$key);
+                $entityManager->persist($categoryEntity);
+                $entityManager->flush();
+
+                foreach ($dish["allergens"] as $allergen){
+                    $allergenEntity = $allergenRepository->findOneBy(['name' => $allergen]);
+                    if(!$allergenEntity)
+                        $allergenEntity = new Allergen();
+                    $allergenEntity->setName($allergen);
+                    $allergenEntity->addDish($dishEntity);
+
+                    $dishEntity->addAllergen($allergenEntity);
+
+                    $entityManager->persist($allergenEntity);
+                    $entityManager->flush();
+                }
+
+                $dishEntity->setCategory($categoryEntity);
+                $dishEntity->setName($dish["name"]);
+                $dishEntity->setPrice((float)$dish["price"]);
+                $dishEntity->setDescription($dish["text"]);
+                $dishEntity->setCalories($dish["calories"]);
+                $dishEntity->setImage($dish["image"]);
+                $dishEntity->setSticky($dish["sticky"]);
+                $dishEntity->setDescription($dish["text"]);
+
+                $entityManager->persist($dishEntity);
+            }
+            $entityManager->flush();
+        }
+
+        dump($dishes);
+        return $this->render('front/dishes_category.html.twig', [
+            'controller_name' => 'FrontController',
+            'dishes' => $dishes
         ]);
     }
 }
