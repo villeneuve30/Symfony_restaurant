@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +57,16 @@ class Dish
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="dishes")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Allergen", mappedBy="dishes")
+     */
+    private $allergens;
+
+    public function __construct()
+    {
+        $this->allergens = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +165,34 @@ class Dish
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Allergen[]
+     */
+    public function getAllergens(): Collection
+    {
+        return $this->allergens;
+    }
+
+    public function addAllergen(Allergen $allergen): self
+    {
+        if (!$this->allergens->contains($allergen)) {
+            $this->allergens[] = $allergen;
+            $allergen->addDish($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllergen(Allergen $allergen): self
+    {
+        if ($this->allergens->contains($allergen)) {
+            $this->allergens->removeElement($allergen);
+            $allergen->removeDish($this);
+        }
 
         return $this;
     }

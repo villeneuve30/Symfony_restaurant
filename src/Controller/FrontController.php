@@ -8,6 +8,9 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class FrontController extends AbstractController
 {
@@ -57,8 +60,41 @@ class FrontController extends AbstractController
     public function dishesCategory($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $dishes = $entityManager->getRepository(Dish::class)->findBy(['category' => $id]);
+        $dishesRepository = $entityManager->getRepository(Dish::class);
+        $categoryRepository = $entityManager->getRepository(Category::class);
 
+        $dishes = $dishesRepository->findBy(['category' => $id]);
+
+        $categoryArray = json_decode(file_get_contents("dishes.json"), true);
+        foreach ($categoryArray as $key => $category){
+            foreach($category as $dish){
+                $dishEntity = $dishesRepository->findOneBy(['name' => $dish["name"]]);
+                if(!$dishEntity)
+                    $dishEntity = new Dish();
+
+                $categoryEntity = $categoryRepository->findOneBy(['name' => $key]);
+                if(!$categoryEntity){
+                    $categoryEntity = new Category();
+                    $categoryEntity->setName($key);
+                    $categoryEntity->setImage("image".$key);
+                    $entityManager->persist($categoryEntity);
+                    $entityManager->flush();
+                }
+                $dishEntity->setCategory($categoryEntity);
+                $dishEntity->setName($dish["name"]);
+                $dishEntity->setPrice((float)$dish["price"]);
+                $dishEntity->setDescription($dish["text"]);
+                $dishEntity->setCalories($dish["calories"]);
+                $dishEntity->setImage($dish["image"]);
+                $dishEntity->setSticky($dish["sticky"]);
+                $dishEntity->setDescription($dish["text"]);
+
+                $entityManager->persist($dishEntity);
+            }
+            $entityManager->flush();
+        }
+
+        dump($dishes);
         return $this->render('front/dishes_category.html.twig', [
             'controller_name' => 'FrontController',
             'dishes' => $dishes
