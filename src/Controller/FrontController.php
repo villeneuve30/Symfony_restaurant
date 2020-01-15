@@ -94,10 +94,18 @@ class FrontController extends AbstractController
             $entityManager->flush();
         }
 
-        dump($dishes);
         return $this->render('front/dishes_category.html.twig', [
             'controller_name' => 'FrontController',
             'dishes' => $dishes
+        ]);
+    }
+    /**
+     *
+     * @Route("/mentions-legales", name="front_legals", methods={"GET"})
+     */
+    public function legals(){
+        return $this->render('front/legals.html.twig', [
+            'controller_name' => 'FrontController'
         ]);
     }
 }
