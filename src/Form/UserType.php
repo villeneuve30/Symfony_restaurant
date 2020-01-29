@@ -19,7 +19,6 @@ class UserType extends AbstractType
             ->add('lastname')
             ->add('jobTitle')
             ->add('enabled')
-            ->add('Enregistrer', SubmitType::class)
         ;
     }
 

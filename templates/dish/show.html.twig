@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dish{% endblock %}
+
+{% block body %}
+    <h1>Dish</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ dish.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ dish.name }}</td>
+            </tr>
+            <tr>
+                <th>Calories</th>
+                <td>{{ dish.calories }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ dish.price }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td><img src="{{ dish.image }}" alt="image"/></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ dish.description }}</td>
+            </tr>
+            <tr>
+                <th>Sticky</th>
+                <td>{{ dish.sticky ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('dish_index') }}">back to list</a>
+
+    <a href="{{ path('dish_edit', {'id': dish.id}) }}">edit</a>
+
+    {{ include('dish/_delete_form.html.twig') }}
+{% endblock %}

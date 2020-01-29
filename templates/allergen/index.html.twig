@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Allergen index{% endblock %}
+
+{% block body %}
+    <h1>Allergen index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for allergen in allergens %}
+            <tr>
+                <td>{{ allergen.id }}</td>
+                <td>{{ allergen.name }}</td>
+                <td>
+                    <a href="{{ path('allergen_show', {'id': allergen.id}) }}">show</a>
+                    <a href="{{ path('allergen_edit', {'id': allergen.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('allergen_new') }}">Create new</a>
+{% endblock %}

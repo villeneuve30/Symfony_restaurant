@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DishRepository")
@@ -40,6 +41,7 @@ class Dish
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(min=10, max=100, minMessage="Description must be at least 10 characters long", maxMessage="Description cannot be longer than 100 characters")
      */
     private $description;
 
