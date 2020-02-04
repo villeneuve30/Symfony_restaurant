@@ -7,28 +7,31 @@
         <table class="table table-hover">
             <tr>
                 <td>Id</td>
-                <td>Username</td>
-                <td>Email</td>
                 <td>Firstname</td>
                 <td>Lastname</td>
+                <td>Email</td>
                 <td>Job title</td>
-                <td>enabled</td>
-                <td>Created at</td>
-                <td>Updated at</td>
             </tr>
-        {% for user in all_users %}
-            <tr>
-                <th scope="row">{{ user.id}}</th>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.jobTitle }}</td>
-                <td>{{ user.enabled }}</td>
-                <td>{{ user.createdAt | date("d/M/Y H:i")}}</td>
-                <td>{{ user.updatedAt | date("d/M/Y H:i")}}</td>
-            </tr>
-        {% endfor %}
+            <tr><td><strong>Midi :</strong></td></tr>
+            {% for employee in day_team_midi %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.firstname }}</td>
+                    <td>{{ employee.lastname }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.jobtitle }}</td>
+                </tr>
+            {% endfor %}
+            <tr><td><strong>Soir :</strong></td></tr>
+            {% for employee in day_team_soir %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.firstname }}</td>
+                    <td>{{ employee.lastname }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.jobtitle }}</td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

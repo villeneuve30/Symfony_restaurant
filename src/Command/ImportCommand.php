@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Services\RhService;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,9 +15,12 @@ class ImportCommand extends ContainerAwareCommand
     protected static $defaultName = "restau:people:import";
     private $response;
 
-    public function __construct()
+    private $rhService;
+
+    public function __construct(string $name = null, RhService $rhService)
     {
-        parent::__construct();
+        $this->rhService = $rhService;
+        parent::__construct($name);
     }
 
     protected function configure()
@@ -25,13 +29,12 @@ class ImportCommand extends ContainerAwareCommand
             ->setName('restau:people:import')
             ->setDescription('Creates a new users')
             ->setHelp('This command allows you to create a user...')
-            ->addArgument('url', InputArgument::REQUIRED, 'url du json')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = json_decode(file_get_contents($input->getArgument('url')),true);
+        $result = $this->rhService->getPeople();
 
         foreach ($result as $person) {
             $entityManager = $this->getContainer()->get('doctrine')->getManager();

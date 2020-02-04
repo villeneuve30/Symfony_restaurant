@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Dish;
 use App\Entity\User;
+use App\Services\RhService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +15,16 @@ use Symfony\Component\Serializer\Serializer;
 
 class FrontController extends AbstractController
 {
+    /**
+     * @var RhService
+     */
+    private $rhService;
+
+    public function __construct(RhService $rhService)
+    {
+        $this->rhService = $rhService;
+    }
+
     /**
      * @Route("/", name="front_home")
      */
@@ -30,11 +41,11 @@ class FrontController extends AbstractController
     public function team()
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $allUsers = $entityManager->getRepository(User::class)->findAll();
-
+        $dayTeam = $this->rhService->getDayTeam(date('Y-m-d'));
         return $this->render('front/team.html.twig', [
             'controller_name' => 'FrontController',
-            'all_users' => $allUsers
+            'day_team_midi' => $dayTeam['midi'],
+            'day_team_soir' => $dayTeam['soir']
         ]);
     }
 
