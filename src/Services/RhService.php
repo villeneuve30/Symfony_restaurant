@@ -4,6 +4,8 @@
 namespace App\Services;
 
 
+use App\Entity\ClientOrder;
+use App\Event\OrderPayedEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -24,5 +26,22 @@ class RhService
         $url = $this->url.'?method=planning&date='.$date;
         $result = json_decode(file_get_contents($url), true);
         return $result;
+    }
+
+
+    public function onOrderPayed(OrderPayedEvent $event){
+        return $this->setOrderPayed($event->getOrder());
+    }
+
+    /**
+     * @param ClientOrder $order
+     * @return mixed
+     */
+    public function setOrderPayed(ClientOrder $order){
+        $url = $this->url
+            .'?method=order&order='.$order->getId()
+            .'&amount='.$order->getPrice()
+            .'&server='.$order->getServeur()->getUsername();
+        return json_decode(file_get_contents($url));
     }
 }

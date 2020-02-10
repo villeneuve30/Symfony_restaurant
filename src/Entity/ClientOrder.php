@@ -19,7 +19,7 @@ class ClientOrder
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $date;
 
@@ -29,12 +29,12 @@ class ClientOrder
     private $serveur;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\ClientTable", inversedBy="clientOrders")
+     * @ORM\ManyToOne(targetEntity="App\Entity\ClientTable")
      */
     private $table;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Dish", inversedBy="clientOrders")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Dish")
      */
     private $dish;
 
@@ -51,7 +51,6 @@ class ClientOrder
     public function __construct()
     {
         $this->dish = new ArrayCollection();
-        $this->setDate(new \DateTime());
     }
 
     public function getId(): ?int

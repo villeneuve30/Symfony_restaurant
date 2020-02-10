@@ -38,10 +38,10 @@ class ClientOrderType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
-                    'Reservé' => 'reserved',
-                    'Arrivé' => 'arrived',
-                    'Commandé' => 'order',
-                    'Réglé' => 'payed',
+                    'Commandé' => 'prise',
+                    'Preparée' => 'preparee',
+                    'Servie' => 'servie',
+                    'Réglé' => 'payee',
                 ]
             ]);
         ;
