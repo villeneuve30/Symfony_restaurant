@@ -1,0 +1,13 @@
+{% extends 'layout/layout.html.twig' %}
+
+{% block title %}Edit ClientOrder{% endblock %}
+
+{% block body %}
+    <h1>Edit ClientOrder</h1>
+
+    {{ include('client_order/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('client_order_index') }}">back to list</a>
+
+    {{ include('client_order/_delete_form.html.twig') }}
+{% endblock %}

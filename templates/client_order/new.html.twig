@@ -1,0 +1,11 @@
+{% extends 'layout/layout.html.twig' %}
+
+{% block title %}New ClientOrder{% endblock %}
+
+{% block body %}
+    <h1>Create new ClientOrder</h1>
+
+    {{ include('client_order/_form.html.twig') }}
+
+    <a href="{{ path('client_order_index') }}">back to list</a>
+{% endblock %}

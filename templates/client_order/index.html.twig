@@ -1,0 +1,40 @@
+{% extends 'layout/layout.html.twig' %}
+
+{% block title %}ClientOrder index{% endblock %}
+
+{% block body %}
+    <h1>ClientOrder index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>date</th>
+                <th>serveur</th>
+                <th>price</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for client_order in client_orders %}
+            <tr>
+                <td>{{ client_order.id }}</td>
+                <td>{{ client_order.date | date('Y-d-m H:i:s')}}</td>
+                <td>{{ client_order.serveur }}</td>
+                <td>{{ client_order.price }}</td>
+                <td>{{ client_order.status }}</td>
+                <td>
+                    <a href="{{ path('client_order_show', {'id': client_order.id}) }}">show</a>
+                    <a href="{{ path('client_order_edit', {'id': client_order.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('client_order_new') }}">Create new</a>
+{% endblock %}

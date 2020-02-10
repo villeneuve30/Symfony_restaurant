@@ -63,9 +63,15 @@ class User
      */
     private $dishes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ClientOrder", mappedBy="serveur")
+     */
+    private $clientOrders;
+
     public function __construct()
     {
         $this->dishes = new ArrayCollection();
+        $this->clientOrders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,5 +209,36 @@ class User
     public function __toString()
     {
         return $this->lastname;
+    }
+
+    /**
+     * @return Collection|ClientOrder[]
+     */
+    public function getClientOrders(): Collection
+    {
+        return $this->clientOrders;
+    }
+
+    public function addClientOrder(ClientOrder $clientOrder): self
+    {
+        if (!$this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders[] = $clientOrder;
+            $clientOrder->setServeur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientOrder(ClientOrder $clientOrder): self
+    {
+        if ($this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders->removeElement($clientOrder);
+            // set the owning side to null (unless already changed)
+            if ($clientOrder->getServeur() === $this) {
+                $clientOrder->setServeur(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -65,9 +65,15 @@ class Dish
      */
     private $allergens;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\ClientOrder", mappedBy="dish")
+     */
+    private $clientOrders;
+
     public function __construct()
     {
         $this->allergens = new ArrayCollection();
+        $this->clientOrders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +200,34 @@ class Dish
         if ($this->allergens->contains($allergen)) {
             $this->allergens->removeElement($allergen);
             $allergen->removeDish($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ClientOrder[]
+     */
+    public function getClientOrders(): Collection
+    {
+        return $this->clientOrders;
+    }
+
+    public function addClientOrder(ClientOrder $clientOrder): self
+    {
+        if (!$this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders[] = $clientOrder;
+            $clientOrder->addDish($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientOrder(ClientOrder $clientOrder): self
+    {
+        if ($this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders->removeElement($clientOrder);
+            $clientOrder->removeDish($this);
         }
 
         return $this;
